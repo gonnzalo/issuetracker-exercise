@@ -1,41 +1,30 @@
 /*
-*
-*
-*       Complete the API routing below
-*
-*
-*/
+ *
+ *
+ *       Complete the API routing below
+ *
+ *
+ */
 
-'use strict';
+const { expect } = require("chai");
 
-var expect = require('chai').expect;
-var MongoClient = require('mongodb');
-var ObjectId = require('mongodb').ObjectID;
+module.exports = app => {
+  app
+    .route("/api/issues/:project")
 
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
-
-module.exports = function (app) {
-
-  app.route('/api/issues/:project')
-  
-    .get(function (req, res){
-      var project = req.params.project;
-      
+    .get((req, res) => {
+      const { project } = req.params;
     })
-    
-    .post(function (req, res){
-      var project = req.params.project;
-      
+
+    .post((req, res) => {
+      const { project } = req.params;
     })
-    
-    .put(function (req, res){
-      var project = req.params.project;
-      
+
+    .put((req, res) => {
+      const { project } = req.params;
     })
-    
-    .delete(function (req, res){
-      var project = req.params.project;
-      
+
+    .delete((req, res) => {
+      const { project } = req.params;
     });
-    
 };
