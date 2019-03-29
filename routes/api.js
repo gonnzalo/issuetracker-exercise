@@ -15,9 +15,14 @@ module.exports = (app, db) => {
 
     .get((req, res) => {
       const { project } = req.params;
+      const myQuery = req.query;
       const collection = db.collection(project);
+
+      if (myQuery._id) myQuery._id = ObjectID(myQuery._id);
+      if (myQuery.open) myQuery.open = myQuery.open === "true";
+
       collection
-        .find()
+        .find(myQuery)
         .toArray()
         .then(items => {
           return res.send(items);
@@ -66,10 +71,9 @@ module.exports = (app, db) => {
       if (Object.keys(updatedFields).length === 0) {
         res.send("no updated field sent");
       }
-      if (updatedFields.open) updatedFields.open = false;
+      if (updatedFields.open)
+        updatedFields.open = updatedFields.open === "true";
       updatedFields.updated_on = new Date();
-
-      console.log(updatedFields);
 
       collection
         .findOneAndUpdate(
@@ -79,7 +83,7 @@ module.exports = (app, db) => {
           },
           { returnOriginal: false }
         )
-        .then(updatedDocument => {
+        .then(() => {
           return res.send("successfully updated");
         })
         .catch(err =>
@@ -91,6 +95,8 @@ module.exports = (app, db) => {
       const { project } = req.params;
 
       const collection = db.collection(project);
+
+      if (!req.body._id) return res.send("_id error");
 
       collection
         .deleteOne({ _id: ObjectID(req.body._id) })
