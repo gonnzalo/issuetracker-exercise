@@ -63,10 +63,13 @@ module.exports = (app, db) => {
           updatedFields[key] = req.body[key];
         }
       });
-
       if (Object.keys(updatedFields).length === 0) {
         res.send("no updated field sent");
       }
+      if (updatedFields.open) updatedFields.open = false;
+      updatedFields.updated_on = new Date();
+
+      console.log(updatedFields);
 
       collection
         .findOneAndUpdate(
@@ -86,5 +89,14 @@ module.exports = (app, db) => {
 
     .delete((req, res) => {
       const { project } = req.params;
+
+      const collection = db.collection(project);
+
+      collection
+        .deleteOne({ _id: ObjectID(req.body._id) })
+        .then(() => {
+          return res.send(`deleted ${req.body._id}`);
+        })
+        .catch(err => console.error(`Failed to deleted document: ${err}`));
     });
 };
